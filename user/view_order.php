@@ -22,46 +22,82 @@ $q->execute();
 $res = $q->get_result();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>Order #<?= $order_id ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .order-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        .back-btn {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
     <?php include '../includes/user_header.php'; ?>
-    <div class="container mt-5">
-        <h3>🧾 Order #<?= $order_id ?></h3>
-        <table class="table table-bordered text-center">
-            <thead class="table-secondary">
-                <tr>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $total = 0;
-                while ($item = $res->fetch_assoc()):
-                    $sub = $item['quantity'] * $item['price'];
-                    $total += $sub;
-                    ?>
-                    <tr>
-                        <td><?= $item['name'] ?></td>
-                        <td><?= $item['quantity'] ?></td>
-                        <td>₹<?= $item['price'] ?></td>
-                        <td>₹<?= $sub ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-        <h4>Total: ₹<?= $total ?></h4>
-        <a href="profile.php" class="btn btn-dark">← Back to Profile</a>
-    </div>
-    <?php include '../includes/user_footer.php'; ?>
 
+    <div class="container py-5">
+        <div class="order-card mx-auto" style="max-width: 800px;">
+            <h3 class="mb-4 text-center">🧾 Order <span class="text-primary">#<?= $order_id ?></span></h3>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>🛒 Product</th>
+                            <th>📦 Qty</th>
+                            <th>💰 Price</th>
+                            <th>📊 Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $total = 0;
+                        while ($item = $res->fetch_assoc()):
+                            $sub = $item['quantity'] * $item['price'];
+                            $total += $sub;
+                            ?>
+                            <tr>
+                                <td><?= htmlspecialchars($item['name']) ?></td>
+                                <td><?= $item['quantity'] ?></td>
+                                <td>₹<?= number_format($item['price'], 2) ?></td>
+                                <td class="text-success fw-bold">₹<?= number_format($sub, 2) ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-end mt-3">
+                <h5>Total Amount: <span class="text-success fw-bold">₹<?= number_format($total, 2) ?></span></h5>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="profile.php" class="btn btn-outline-dark back-btn">← Back to Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <?php include '../includes/user_footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -43,69 +43,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Register | MySite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: linear-gradient(120deg, #f0f4f8, #d9e8f5);
+            background: linear-gradient(135deg, #e0f2ff, #f3f8ff);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .card {
+            border: none;
             border-radius: 1rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #0d6efd;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         .form-title {
-            font-weight: 600;
+            font-weight: 700;
             color: #0d6efd;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            border-color: #0d6efd;
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container col-md-5">
-        <div class="card p-4">
-            <h2 class="form-title text-center mb-3">📝 Create Your Account</h2>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card p-4 p-sm-5">
+                    <h2 class="form-title text-center mb-4">📝 Create Your Account</h2>
 
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?= $error ?></div>
-            <?php endif; ?>
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                    <?php endif; ?>
 
-            <form method="POST" novalidate>
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input name="name" type="text" class="form-control" placeholder="Enter your full name" required>
+                    <form method="POST" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input name="name" type="text" class="form-control" placeholder="Enter your full name"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input name="email" type="email" class="form-control" placeholder="Enter your email"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input name="password" type="password" class="form-control"
+                                placeholder="Enter a strong password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+
+                    <hr class="my-4">
+                    <p class="text-center">
+                        Already have an account? <a href="login.php" class="text-decoration-none">Login here</a>
+                    </p>
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email Address</label>
-                    <input name="email" type="email" class="form-control" placeholder="Enter your email" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input name="password" type="password" class="form-control" placeholder="Enter a strong password"
-                        required>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">Register</button>
-            </form>
-
-            <hr>
-            <p class="text-center mt-2">
-                Already have an account?
-                <a href="login.php" class="text-decoration-none">Login here</a>
-            </p>
+            </div>
         </div>
     </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

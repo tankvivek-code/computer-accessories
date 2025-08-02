@@ -15,30 +15,37 @@ $res = $conn->query("
     ORDER BY o.created_at DESC
 ");
 ?>
+<div class="container my-5">
+    <h3 class="mb-4">📦 Your Orders</h3>
 
-<div class="container mt-4">
-    <h3>📦 Your Orders</h3>
     <?php if (isset($_GET['success'])): ?>
-        <div class="alert alert-success">Order placed successfully!</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ✅ Order placed successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     <?php endif; ?>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $res->fetch_assoc()): ?>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
                 <tr>
-                    <td>#<?= $row['id'] ?></td>
-                    <td><?= $row['created_at'] ?></td>
-                    <td>₹<?= number_format($row['total'], 2) ?></td>
+                    <th scope="col">🆔 Order ID</th>
+                    <th scope="col">📅 Date</th>
+                    <th scope="col">💰 Total</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php while ($row = $res->fetch_assoc()): ?>
+                    <tr>
+                        <td>#<?= htmlspecialchars($row['id']) ?></td>
+                        <td><?= htmlspecialchars($row['created_at']) ?></td>
+                        <td>₹<?= number_format($row['total'], 2) ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 <?php include_once __DIR__ . '/../includes/user_footer.php'; ?>

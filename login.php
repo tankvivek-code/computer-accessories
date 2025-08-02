@@ -47,33 +47,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <title>Login | Store</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            font-family: "Segoe UI", sans-serif;
         }
 
         .login-box {
-            background: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
         }
 
         .login-title {
-            font-size: 24px;
+            font-size: 1.8rem;
             font-weight: 600;
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
             color: #333;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 0.75rem;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 500;
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 576px) {
+            .login-box {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="col-md-5 login-box">
-            <div class="login-title text-center">🔐 Login</div>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="login-box">
+            <div class="login-title text-center">🔐 Login to Your Account</div>
 
             <?php if ($success): ?>
                 <div class="alert alert-success"><?= $success ?></div>
@@ -85,16 +116,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST">
                 <div class="mb-3">
-                    <label>Email <span class="text-danger">*</span></label>
-                    <input name="email" type="email" class="form-control" required>
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="Enter your email"
+                        required>
                 </div>
                 <div class="mb-3">
-                    <label>Password <span class="text-danger">*</span></label>
-                    <input name="password" type="password" class="form-control" required>
+                    <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                    <input id="password" name="password" type="password" class="form-control"
+                        placeholder="Enter your password" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
-                <p class="mt-3 text-center">
-                    Don't have an account? <a href="register.php">Register</a>
+
+                <p class="mt-4 text-center small">
+                    Don't have an account? <a href="register.php" class="text-decoration-none">Register here</a>
                 </p>
             </form>
         </div>

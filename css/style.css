@@ -175,3 +175,13 @@ footer {
     flex-direction: column;
   }
 }
+.product-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 0.75rem 1.25rem rgba(0, 0, 0, 0.1);
+}
+/* Add to your styles.css */
+img.object-fit-cover {
+  object-fit: cover;
+  height: auto;
+}

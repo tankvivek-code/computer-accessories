@@ -21,31 +21,39 @@ session_start();
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2 shadow">
-        <a class="navbar-brand fw-bold" href="#">🛍️ Store</a>
-        <div class="ms-auto">
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <span class="text-white me-3">👋 Hi, <?= htmlspecialchars($_SESSION['user_name']) ?></span>
-                <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                    <a href="admin/dashboard.php" class="btn btn-warning btn-sm">Admin Panel</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow py-2">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#">🛍️ Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <span class="navbar-text text-white me-3">👋 Hi, <?= htmlspecialchars($_SESSION['user_name']) ?></span>
+                    <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                        <a href="admin/dashboard.php" class="btn btn-warning btn-sm me-2">Admin Panel</a>
+                    <?php else: ?>
+                        <a href="user/dashboard.php" class="btn btn-primary btn-sm me-2">User Dashboard</a>
+                    <?php endif; ?>
+                    <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
                 <?php else: ?>
-                    <a href="user/dashboard.php" class="btn btn-primary btn-sm">User Dashboard</a>
+                    <a href="login.php" class="btn btn-success btn-sm me-2">Login</a>
+                    <a href="register.php" class="btn btn-outline-light btn-sm">Register</a>
                 <?php endif; ?>
-                <a href="logout.php" class="btn btn-outline-light btn-sm ms-2">Logout</a>
-            <?php else: ?>
-                <a href="login.php" class="btn btn-success btn-sm me-2">Login</a>
-                <a href="register.php" class="btn btn-outline-light btn-sm">Register</a>
-            <?php endif; ?>
+            </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="container mt-5 text-center">
-        <h1 class="display-4 mb-3">💻 Laptop Accessories Store</h1>
-        <p class="lead text-muted">Explore the latest accessories. Please log in to view products and manage your cart.
+        <h1 class="display-5 fw-semibold mb-3">💻 Laptop Accessories Store</h1>
+        <p class="lead text-muted px-2 px-md-5">
+            Explore the latest accessories. Please log in to view products and manage your cart.
         </p>
-        <img src="assets/banner.jpg " alt="Store Banner" class="img-fluid rounded shadow mt-4"
-            style="max-height: 350px;">
+        <img src="assets/banner.jpg" alt="Store Banner" class="img-fluid rounded shadow mt-4 w-100"
+            style="max-height: 350px; object-fit: cover;">
     </div>
 
     <!-- Footer -->
