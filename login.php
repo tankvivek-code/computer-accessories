@@ -3,24 +3,42 @@ session_start();
 include "includes/db.php";
 
 $error = "";
+$success = "";
+
+// Show register success message if coming from register.php
+if (isset($_SESSION['register_success'])) {
+    $success = $_SESSION['register_success'];
+    unset($_SESSION['register_success']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $pass = trim($_POST['password']);
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email=? AND password=?");
-    $stmt->bind_param("ss", $email, $pass);
+    // Prepare statement to get user by email
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows === 1) {
+    if ($result && $result->num_rows === 1) {
         $row = $result->fetch_assoc();
-        $_SESSION['user_id'] = $row['id'];
-        $_SESSION['user_name'] = $row['name'];
-        $_SESSION['user_role'] = $row['role'];
-        header("Location: index.php");
-        exit;
+
+        // Verify password (use password_verify if password is hashed)
+        if ($pass === $row['password'] || password_verify($pass, $row['password'])) {
+            // Store session
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user_name'] = $row['name'];
+            $_SESSION['user_role'] = $row['role'];
+
+            // ✅ Redirect all users to the homepage after login
+            header("Location: index.php");
+            exit;
+        } else {
+            $error = "Incorrect password.";
+        }
     } else {
-        $error = "Invalid credentials.";
+        $error = "No user found with that email.";
     }
 }
 ?>
@@ -55,10 +73,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-5 login-box">
-            <div class="login-title text-center">🔐 User Login</div>
+            <div class="login-title text-center">🔐 Login</div>
+
+            <?php if ($success): ?>
+                <div class="alert alert-success"><?= $success ?></div>
+            <?php endif; ?>
+
             <?php if ($error): ?>
                 <div class="alert alert-danger"><?= $error ?></div>
             <?php endif; ?>
+
             <form method="POST">
                 <div class="mb-3">
                     <label>Email <span class="text-danger">*</span></label>
