@@ -37,18 +37,23 @@ $res = $q->get_result();
 
         .order-card {
             background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
         }
 
-        .table th,
-        .table td {
-            vertical-align: middle;
-        }
+        @media (max-width: 576px) {
+            .order-card {
+                padding: 1rem;
+            }
 
-        .back-btn {
-            text-decoration: none;
+            h3 {
+                font-size: 1.25rem;
+            }
+
+            h5 {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -57,8 +62,11 @@ $res = $q->get_result();
     <?php include '../includes/user_header.php'; ?>
 
     <div class="container py-5">
-        <div class="order-card mx-auto" style="max-width: 800px;">
-            <h3 class="mb-4 text-center">🧾 Order <span class="text-primary">#<?= $order_id ?></span></h3>
+        <div class="order-card mx-auto" style="max-width: 900px;">
+            <h3 class="mb-4 text-center">
+                🧾 Order <span class="text-primary">#<?= $order_id ?></span>
+            </h3>
+
             <div class="table-responsive">
                 <table class="table table-bordered align-middle text-center">
                     <thead class="table-light">
@@ -73,10 +81,9 @@ $res = $q->get_result();
                         <?php $total = 0;
                         while ($item = $res->fetch_assoc()):
                             $sub = $item['quantity'] * $item['price'];
-                            $total += $sub;
-                            ?>
+                            $total += $sub; ?>
                             <tr>
-                                <td><?= htmlspecialchars($item['name']) ?></td>
+                                <td class="text-start"><?= htmlspecialchars($item['name']) ?></td>
                                 <td><?= $item['quantity'] ?></td>
                                 <td>₹<?= number_format($item['price'], 2) ?></td>
                                 <td class="text-success fw-bold">₹<?= number_format($sub, 2) ?></td>
@@ -87,11 +94,15 @@ $res = $q->get_result();
             </div>
 
             <div class="text-end mt-3">
-                <h5>Total Amount: <span class="text-success fw-bold">₹<?= number_format($total, 2) ?></span></h5>
+                <h5>Total Amount:
+                    <span class="text-success fw-bold">₹<?= number_format($total, 2) ?></span>
+                </h5>
             </div>
 
             <div class="mt-4 text-center">
-                <a href="profile.php" class="btn btn-outline-dark back-btn">← Back to Profile</a>
+                <a href="profile.php" class="btn btn-outline-dark">
+                    ← Back to Profile
+                </a>
             </div>
         </div>
     </div>

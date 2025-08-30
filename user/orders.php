@@ -16,7 +16,7 @@ $res = $conn->query("
 ");
 ?>
 <div class="container my-5">
-    <h3 class="mb-4">📦 Your Orders</h3>
+    <h3 class="mb-4 text-center text-md-start">📦 Your Orders</h3>
 
     <?php if (isset($_GET['success'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -26,8 +26,8 @@ $res = $conn->query("
     <?php endif; ?>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
+        <table class="table table-hover align-middle text-center text-md-start">
+            <thead class="table-dark">
                 <tr>
                     <th scope="col">🆔 Order ID</th>
                     <th scope="col">📅 Date</th>
@@ -35,17 +35,22 @@ $res = $conn->query("
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row = $res->fetch_assoc()): ?>
+                <?php if ($res->num_rows > 0): ?>
+                    <?php while ($row = $res->fetch_assoc()): ?>
+                        <tr>
+                            <td>#<?= htmlspecialchars($row['id']) ?></td>
+                            <td><?= date("d M Y, h:i A", strtotime($row['created_at'])) ?></td>
+                            <td class="fw-bold text-success">₹<?= number_format($row['total'], 2) ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
                     <tr>
-                        <td>#<?= htmlspecialchars($row['id']) ?></td>
-                        <td><?= htmlspecialchars($row['created_at']) ?></td>
-                        <td>₹<?= number_format($row['total'], 2) ?></td>
+                        <td colspan="3" class="text-muted py-4">🙁 No orders found.</td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
-
 
 <?php include_once __DIR__ . '/../includes/user_footer.php'; ?>

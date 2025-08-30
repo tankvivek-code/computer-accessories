@@ -1,59 +1,44 @@
 <?php
 session_start();
-include_once '../includes/auth_user.php';
-include_once '../includes/db.php';
-include_once '../includes/user_header.php';
+include '../includes/db.php';
+include '../includes/auth_user.php';
 
 if (!isset($_GET['id'])) {
-    die("Product not found");
+    header("Location: dashboard.php");
+    exit();
 }
 
-$id = intval($_GET['id']);
-$res = $conn->query("SELECT * FROM products WHERE id=$id");
+$product_id = (int) $_GET['id'];
+$stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
+$stmt->bind_param("i", $product_id);
+$stmt->execute();
+$product = $stmt->get_result()->fetch_assoc();
 
-if (!$res || $res->num_rows === 0) {
-    die("Product not found");
+if (!$product) {
+    header("Location: dashboard.php");
+    exit();
 }
-
-$product = $res->fetch_assoc();
-$in_stock = (int) $product['stock'];
 ?>
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="row g-4 align-items-start shadow rounded p-4 bg-white">
-                <div class="col-md-6">
-                    <div class="border rounded overflow-hidden">
-                        <img src="../uploads/<?= htmlspecialchars($product['image']) ?>"
-                            alt="<?= htmlspecialchars($product['name']) ?>" class="img-fluid w-100 object-fit-cover"
-                            style="max-height: 400px;">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <h2 class="mb-3"><?= htmlspecialchars($product['name']) ?></h2>
-                    <h4 class="text-success mb-3">₹<?= number_format($product['price'], 2) ?></h4>
 
-                    <p class="mb-2"><strong>Stock:</strong>
-                        <?= $in_stock > 0
-                            ? "<span class='text-success fw-semibold'>$in_stock Available</span>"
-                            : "<span class='text-danger fw-semibold'>Out of Stock</span>" ?>
-                    </p>
+<?php include '../includes/user_header.php'; ?>
 
-                    <p class="mb-4"><?= nl2br(htmlspecialchars($product['description'])) ?></p>
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-12 col-md-6">
+            <img src="/computer-accessories/uploads/<?= htmlspecialchars($product['image']) ?>"
+                class="img-fluid rounded shadow" alt="<?= htmlspecialchars($product['name']) ?>">
+        </div>
+        <div class="col-12 col-md-6">
+            <h2><?= htmlspecialchars($product['name']) ?></h2>
+            <h4 class="text-success">₹<?= number_format($product['price'], 2) ?></h4>
+            <p class="text-muted">Stock: <?= $product['stock'] ?></p>
+            <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
 
-                    <?php if ($in_stock > 0): ?>
-                        <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="btn btn-success px-4 py-2">
-                            🛒 Add to Cart
-                        </a>
-                    <?php else: ?>
-                        <button class="btn btn-secondary px-4 py-2" disabled>
-                            Out of Stock
-                        </button>
-                    <?php endif; ?>
-                </div>
+            <div class="d-flex flex-column flex-md-row gap-2 mt-3">
+                <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="btn btn-primary">🛒 Add to Cart</a>
+                <a href="dashboard.php" class="btn btn-outline-secondary">← Back</a>
             </div>
         </div>
     </div>
+    <?php include '../includes/user_footer.php'; ?>
 </div>
-
-<?php include_once '../includes/user_footer.php'; ?>

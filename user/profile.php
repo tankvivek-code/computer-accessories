@@ -14,6 +14,7 @@ $query->execute();
 $orders = $query->get_result();
 ?>
 
+<?php include '../includes/user_header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,11 +32,8 @@ $orders = $query->get_result();
             border-bottom: 2px solid #dee2e6;
         }
 
+        /* Mobile Responsive Table */
         @media (max-width: 768px) {
-            .table-responsive {
-                border: none;
-            }
-
             .table thead {
                 display: none;
             }
@@ -45,6 +43,8 @@ $orders = $query->get_result();
                 text-align: right;
                 padding-left: 50%;
                 position: relative;
+                border: none !important;
+                border-bottom: 1px solid #dee2e6 !important;
             }
 
             .table tbody td::before {
@@ -62,7 +62,7 @@ $orders = $query->get_result();
                 display: block;
                 border: 1px solid #dee2e6;
                 border-radius: 0.5rem;
-                background: white;
+                background: #fff;
                 padding: 10px;
             }
         }
@@ -70,7 +70,6 @@ $orders = $query->get_result();
 </head>
 
 <body>
-    <?php include '../includes/user_header.php'; ?>
 
     <div class="container mt-5">
         <div class="profile-header mb-4 pb-2">
@@ -79,7 +78,10 @@ $orders = $query->get_result();
         </div>
 
         <?php if (isset($_GET['success'])): ?>
-            <div class="alert alert-success">✅ Your order was placed successfully!</div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                ✅ Your order was placed successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
 
         <div class="table-responsive">
@@ -100,17 +102,19 @@ $orders = $query->get_result();
                                 <td data-label="#">#<?= $order['id'] ?></td>
                                 <td data-label="Total">
                                     <?php
-                                    $total = $conn->query("SELECT SUM(oi.quantity * p.price) AS total 
-                      FROM order_items oi 
-                      JOIN products p ON oi.product_id = p.id 
-                      WHERE oi.order_id = {$order['id']}")->fetch_assoc()['total'] ?? 0;
+                                    $total = $conn->query("
+                                        SELECT SUM(oi.quantity * p.price) AS total 
+                                        FROM order_items oi 
+                                        JOIN products p ON oi.product_id = p.id 
+                                        WHERE oi.order_id = {$order['id']}
+                                    ")->fetch_assoc()['total'] ?? 0;
                                     echo '₹' . number_format($total, 2);
                                     ?>
                                 </td>
                                 <td data-label="Payment"><?= ucfirst($order['payment_method']) ?></td>
                                 <td data-label="Status">
                                     <?php
-                                    $status = $order['status'];
+                                    $status = $order['status'] ?? 'Pending';
                                     $badge = match ($status) {
                                         'Accepted' => 'info',
                                         'On the Way' => 'warning',
@@ -118,7 +122,7 @@ $orders = $query->get_result();
                                         default => 'secondary',
                                     };
                                     ?>
-                                    <span class="badge bg-<?= $badge ?>"><?= $status ?? 'Pending' ?></span>
+                                    <span class="badge bg-<?= $badge ?>"><?= htmlspecialchars($status) ?></span>
                                 </td>
                                 <td data-label="Date"><?= date('d M Y, h:i A', strtotime($order['created_at'])) ?></td>
                             </tr>
@@ -133,7 +137,8 @@ $orders = $query->get_result();
         </div>
     </div>
 
-    <?php include '../includes/user_footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
+<?php include '../includes/user_footer.php'; ?>

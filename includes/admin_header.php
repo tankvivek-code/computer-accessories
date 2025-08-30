@@ -30,10 +30,12 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2">
                     <li class="nav-item">
                         <span class="nav-link text-light">👤
-                            <?= htmlspecialchars($_SESSION['user_name'] ?? 'Admin') ?></span>
+                            <?= htmlspecialchars($_SESSION['user_name'] ?? 'Admin') ?>
+                        </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-btn-outline-secondary text-capitalize" href="../admin/dashboard.php">Dashboard</a>
+                        <a class="nav-link text-btn-outline-secondary text-capitalize"
+                            href="../admin/dashboard.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger" href="../logout.php">Logout</a>

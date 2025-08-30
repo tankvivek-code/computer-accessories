@@ -53,37 +53,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php include '../includes/admin_header.php'; ?>
 
-<div class="container mt-5">
-    <h3>✏️ Edit Product</h3>
-    <form method="POST" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label>Name:</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required
-                class="form-control">
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-center">✏️ Edit Product</h3>
+
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Name:</label>
+                            <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required
+                                class="form-control">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Price:</label>
+                                <input type="number" step="0.01" name="price" value="<?= $product['price'] ?>" required
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock:</label>
+                                <input type="number" name="stock" value="<?= $product['stock'] ?>" required
+                                    class="form-control" min="0">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description:</label>
+                            <textarea name="description" rows="4"
+                                class="form-control"><?= htmlspecialchars($product['description']) ?></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Current Image:</label><br>
+                            <img src="../uploads/<?= htmlspecialchars($product['image']) ?>"
+                                class="img-fluid rounded shadow-sm mb-3" style="max-width:150px;" alt="Product Image">
+                            <label class="form-label">Change Image (optional):</label>
+                            <input type="file" name="image" class="form-control">
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="products.php" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label>Price:</label>
-            <input type="number" step="0.01" name="price" value="<?= $product['price'] ?>" required
-                class="form-control">
-        </div>
-        <div class="mb-3">
-            <label>Stock:</label>
-            <input type="number" name="stock" value="<?= $product['stock'] ?>" required class="form-control" min="0">
-        </div>
-        <div class="mb-3">
-            <label>Description:</label>
-            <textarea name="description"
-                class="form-control"><?= htmlspecialchars($product['description']) ?></textarea>
-        </div>
-        <div class="mb-3">
-            <label>Current Image:</label><br>
-            <img src="../uploads/<?= htmlspecialchars($product['image']) ?>" width="120"><br><br>
-            <label>Change Image (optional):</label>
-            <input type="file" name="image" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Update Product</button>
-        <a href="products.php" class="btn btn-secondary">Cancel</a>
-    </form>
+    </div>
 </div>
 
 <?php include '../includes/admin_footer.php'; ?>
