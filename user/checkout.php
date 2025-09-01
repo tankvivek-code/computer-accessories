@@ -15,7 +15,7 @@ $user_id = $_SESSION['user_id'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_method = $_POST['payment_method'] ?? 'COD';
 
-    // Fake validation for demonstration
+    // Fake validations
     if ($payment_method === "UPI" && empty($_POST['upi_id'])) {
         echo "<script>alert('❌ Please enter UPI ID'); window.history.back();</script>";
         exit();
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // 🛒 Get cart items
+    // 🛒 Fetch cart
     $stmt = $conn->prepare("SELECT c.*, p.name, p.price, p.stock 
                             FROM cart c 
                             JOIN products p ON c.product_id = p.id 
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $insert_order->execute();
     $order_id = $conn->insert_id;
 
-    // Insert order items
+    // Order items
     while ($item = $cart->fetch_assoc()) {
         $product_id = $item['product_id'];
         $quantity = (int) $item['quantity'];
@@ -84,59 +84,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- UI Part -->
 <?php include '../includes/user_header.php'; ?>
 
-<div class="container mt-5">
-    <h2 class="mb-4">🧾 Checkout</h2>
-    <form method="POST" id="paymentForm">
-        <div class="mb-3">
-            <label for="payment_method" class="form-label">💳 Choose Payment Method:</label>
-            <select name="payment_method" id="payment_method" class="form-select" required
-                onchange="togglePaymentFields()">
-                <option value="COD">Cash on Delivery</option>
-                <option value="UPI">UPI</option>
-                <option value="Card">Debit/Credit Card</option>
-                <option value="NetBanking">Net Banking</option>
-            </select>
-        </div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-12">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-center fw-bold">🧾 Checkout</h2>
+                    <form method="POST" id="paymentForm">
 
-        <!-- Fake Payment Fields -->
-        <div id="upiFields" class="mb-3 d-none">
-            <label class="form-label">Enter UPI ID:</label>
-            <input type="text" name="upi_id" class="form-control" placeholder="example@upi">
-        </div>
+                        <!-- Payment Method -->
+                        <div class="mb-3">
+                            <label for="payment_method" class="form-label fw-semibold">💳 Choose Payment Method:</label>
+                            <select name="payment_method" id="payment_method" class="form-select" required
+                                onchange="togglePaymentFields()">
+                                <option value="COD">Cash on Delivery</option>
+                                <option value="UPI">UPI</option>
+                                <option value="Card">Debit/Credit Card</option>
+                                <option value="NetBanking">Net Banking</option>
+                            </select>
+                        </div>
 
-        <div id="cardFields" class="mb-3 d-none">
-            <label class="form-label">Card Number:</label>
-            <input type="text" name="card_number" class="form-control" placeholder="1111 2222 3333 4444">
-            <div class="row mt-2">
-                <div class="col">
-                    <input type="text" name="expiry" class="form-control" placeholder="MM/YY">
-                </div>
-                <div class="col">
-                    <input type="password" name="cvv" class="form-control" placeholder="CVV">
+                        <!-- UPI -->
+                        <div id="upiFields" class="mb-3 d-none">
+                            <label class="form-label">Enter UPI ID:</label>
+                            <input type="text" name="upi_id" class="form-control" placeholder="example@upi">
+                        </div>
+
+                        <!-- Card -->
+                        <div id="cardFields" class="mb-3 d-none">
+                            <label class="form-label">Card Number:</label>
+                            <input type="text" name="card_number" class="form-control"
+                                placeholder="1111 2222 3333 4444">
+                            <div class="row mt-2 g-2">
+                                <div class="col-6">
+                                    <input type="text" name="expiry" class="form-control" placeholder="MM/YY">
+                                </div>
+                                <div class="col-6">
+                                    <input type="password" name="cvv" class="form-control" placeholder="CVV">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Net Banking -->
+                        <div id="netBankingFields" class="mb-3 d-none">
+                            <label class="form-label">Select Bank:</label>
+                            <select name="bank_name" class="form-select">
+                                <option value="">-- Select Bank --</option>
+                                <option value="SBI">State Bank of India</option>
+                                <option value="HDFC">HDFC Bank</option>
+                                <option value="ICICI">ICICI Bank</option>
+                                <option value="AXIS">Axis Bank</option>
+                            </select>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex flex-wrap justify-content-between gap-2 mt-4">
+                            <a href="cart.php" class="btn btn-outline-secondary flex-fill">🔙 Back to Cart</a>
+                            <button type="submit" class="btn btn-success flex-fill">✅ Place Order</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <div id="netBankingFields" class="mb-3 d-none">
-            <label class="form-label">Select Bank:</label>
-            <select name="bank_name" class="form-select">
-                <option value="">-- Select Bank --</option>
-                <option value="SBI">State Bank of India</option>
-                <option value="HDFC">HDFC Bank</option>
-                <option value="ICICI">ICICI Bank</option>
-                <option value="AXIS">Axis Bank</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-success">✅ Place Order</button>
-        <a href="cart.php" class="btn btn-secondary">🔙 Back to Cart</a>
-    </form>
+    </div>
 </div>
 
 <script>
     function togglePaymentFields() {
         let method = document.getElementById("payment_method").value;
-
         document.getElementById("upiFields").classList.add("d-none");
         document.getElementById("cardFields").classList.add("d-none");
         document.getElementById("netBankingFields").classList.add("d-none");
